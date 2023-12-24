@@ -47,7 +47,6 @@ void ges_dico(){
                 string name;
                 cout << "Veuillez renseigner le nom du dictionnaire : ";
                 cin >> name;
-                cout << endl;
                 if(search(name)){
                     dico.dico_actif = name;
                     fichier.open(name);
