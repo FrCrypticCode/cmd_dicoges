@@ -43,58 +43,59 @@ void make_dico(string name){
 void clean(string name){
     fstream fichier(name);
     string line;
-    vector<string> temp;
+    ofstream temp("temp.txt");
     while(getline(fichier,line)){
         char f = line.front();
         if(!isspace(f)){
-            temp.push_back(line);
+            temp << line << endl;
         }
     }
     fichier.close();
-    ofstream file(name);
-    for(string i:temp){
-        file << i << endl;
-    }
+    temp.close();
+    remove(name.c_str());
+    rename("temp.txt",name.c_str());
 }
 
 void add_word(string name,string word){
-    ifstream fichier(name);
-    vector<string> file ;
-    string line;
+    fstream fichier(name);
+    ofstream fichier_c("temp.txt");
+    string line,index;
+    index.push_back('#');
+    index.push_back(word.front());
+    int pos = 0;
     bool check = false;
-    char index = word.front();
-    while (getline(fichier,line)){
-        file.push_back(line);
-        int pos = line.find('#');
-        if (pos !=-1 && line.at(pos+1) == index){ 
-            file.push_back(word);
+    while(getline(fichier,line)){
+        cout << word << "| Index : " << index << " | " << line << endl;
+        if(line == index){
+            fichier_c << line << endl << word << endl;
             check = true;
         }
+        else{
+            fichier_c << line << endl;
+        }
+        pos+= 1;
     }
-    if(!check){
-        string str;
-        str.push_back('#');
-        str.push_back(index);
-        file.push_back(str);
-        file.push_back(word);
+    if(check == false){
+        cout << "Ligne : " << pos << " Contenu : " << line << endl;
+        fichier_c << index << endl << word;
     }
-
-    fstream fic(name);
-    for (string line : file) {
-        fic << line << endl;
-    }
+    fichier.close();
+    fichier_c.close();
+    remove(name.c_str());
+    rename("temp.txt",name.c_str());
 }
 
 void rem_word(string name,string word){
     fstream fichier(name);
-    string lines[4];
     string line;
+    size_t found;
     int compt = 0;
     int pos = 0;
+    int l;
     bool valid = false;
     while(getline(fichier,line)){
-        size_t found = line.find(word);
-        int l = line.size()+1;
+        found = line.find(word);
+        l = line.size()+1;
         if(found!=std::string::npos){
             fichier.seekg(pos);
             string add;
